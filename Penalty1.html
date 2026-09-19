@@ -227,7 +227,7 @@
     const lines = [];
     lines.push([EVENT_NAME.trim(), value("event")].filter(Boolean).join(" "));
     lines.push(
-      value("table"),
+      value("table") ? "T" + value("table") : "",
       value("duelistName"),
       value("konamiId"),
       infraction,
