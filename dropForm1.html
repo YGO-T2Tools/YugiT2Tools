@@ -168,7 +168,7 @@
     const lines = [
       [EVENT_NAME.trim(), value("event")].filter(Boolean).join(" "),
       value("table") ? "T" + value("table") : "",
-      value("winnerName"),
+      value("winnerName") ? "Winner: " + value("winnerName") : "",
       value("winnerId"),
       value("round") ? "R" + value("round") : ""
     ];
