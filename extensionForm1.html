@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Discord Extension Form</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: #f3f4f6;
+    color: #1f2937;
+    padding: 24px;
+  }
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .back {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    margin-bottom: 16px;
+    padding: 10px 16px;
+    background: white;
+    color: #374151;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 7px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.08);
+    -webkit-tap-highlight-color: transparent;
+  }
+  .back:hover { background: #e5e7eb; }
+  .back:focus-visible { outline: 2px solid #9ca3af; outline-offset: 2px; }
+  h1 { margin: 0 0 6px; font-size: 28px; }
+  .subtitle { margin: 0 0 24px; color: #6b7280; }
+  .card {
+    background: white;
+    border-radius: 12px;
+    padding: 22px;
+    margin-bottom: 18px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.08);
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+  label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  input, select, textarea {
+    width: 100%;
+    border: 1px solid #d1d5db;
+    border-radius: 7px;
+    padding: 10px 11px;
+    font: inherit;
+    background: white;
+  }
+  input:focus, select:focus, textarea:focus {
+    outline: 2px solid #9ca3af;
+    outline-offset: 1px;
+  }
+  textarea { min-height: 120px; resize: vertical; }
+  .full { grid-column: 1 / -1; }
+  .buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 18px;
+    flex-wrap: wrap;
+  }
+  button {
+    border: 0;
+    border-radius: 7px;
+    padding: 11px 18px;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .copy { background: #5865f2; color: white; }
+  .copy:hover { background: #4752c4; }
+  .clear { background: #e5e7eb; color: #374151; }
+  .output {
+    min-height: 140px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    white-space: pre-wrap;
+  }
+  .status {
+    min-height: 22px;
+    margin-top: 8px;
+    font-size: 14px;
+    color: #166534;
+  }
+  @media (max-width: 650px) {
+    body { padding: 12px; }
+    .grid { grid-template-columns: 1fr; }
+    .full { grid-column: auto; }
+    .card { padding: 16px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <a class="back" href="index.html">← Back</a>
+  <h1>Discord Extension Form</h1>
+  <p class="subtitle">Enter the details, then copy the formatted report into Discord.</p>
+
+  <div class="card">
+    <div class="grid">
+      <div>
+        <label for="event">Event</label>
+        <select id="event">
+          <option value="">Select event</option>
+          <option>Advance</option>
+          <option>Genesys</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="round">Round</label>
+        <input id="round" type="text" inputmode="numeric" autocomplete="off">
+      </div>
+
+      <div>
+        <label for="table">Table</label>
+        <input id="table" type="text" inputmode="numeric" autocomplete="off">
+      </div>
+
+      <div>
+        <label for="time">Time (minutes)</label>
+        <input id="time" type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="off" placeholder="Whole number">
+      </div>
+
+      <div class="full">
+        <label for="judgeName">Judge Name</label>
+        <input id="judgeName" type="text" autocomplete="off" placeholder="Judge name">
+      </div>
+    </div>
+
+    <div class="buttons">
+      <button class="copy" id="copyButton" type="button">Copy to Clipboard</button>
+      <button class="clear" id="clearButton" type="button">Clear Form</button>
+    </div>
+    <div class="status" id="status" aria-live="polite"></div>
+  </div>
+
+  <div class="card">
+    <label for="output">Discord Output</label>
+    <textarea id="output" class="output" readonly></textarea>
+  </div>
+</div>
+
+<script>
+  // ============================================================
+  // EDIT HERE: event name shown at the top of the Discord output.
+  // Change the text between the quotes. Leave it as "" to hide it.
+  // ============================================================
+  const EVENT_NAME = "";
+
+  const fields = ["event", "round", "table", "time", "judgeName"];
+
+  function value(id) {
+    return document.getElementById(id).value.trim();
+  }
+
+  function generateOutput() {
+    const lines = [
+      [EVENT_NAME.trim(), value("event")].filter(Boolean).join(" "),
+      value("round") ? "R" + value("round") : "",
+      value("table") ? "T" + value("table") : "",
+      value("time") ? "+" + value("time") + " minutes" : "",
+      value("judgeName")
+    ];
+
+    const text = "```\n" + lines.join("\n") + "\n```";
+
+    document.getElementById("output").value = text;
+    return text;
+  }
+
+  async function copyOutput() {
+    const text = generateOutput();
+
+    try {
+      await navigator.clipboard.writeText(text);
+      document.getElementById("status").textContent = "Copied to clipboard!";
+    } catch (err) {
+      const output = document.getElementById("output");
+      output.focus();
+      output.select();
+      document.execCommand("copy");
+      document.getElementById("status").textContent = "Copied to clipboard!";
+    }
+
+    setTimeout(() => {
+      document.getElementById("status").textContent = "";
+    }, 2000);
+  }
+
+  function clearForm() {
+    fields.forEach(id => {
+      document.getElementById(id).value = "";
+    });
+    document.getElementById("output").value = "";
+    document.getElementById("status").textContent = "";
+    document.getElementById("event").focus();
+  }
+
+  // Time accepts whole numbers only: strip anything that isn't a digit.
+  document.getElementById("time").addEventListener("input", function () {
+    this.value = this.value.replace(/\D/g, "");
+  });
+
+  fields.forEach(id => {
+    document.getElementById(id).addEventListener("input", generateOutput);
+    document.getElementById(id).addEventListener("change", generateOutput);
+  });
+
+  document.getElementById("copyButton").addEventListener("click", copyOutput);
+  document.getElementById("clearButton").addEventListener("click", clearForm);
+
+  generateOutput();
+</script>
+</body>
+</html>
