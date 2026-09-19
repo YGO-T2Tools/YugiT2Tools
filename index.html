@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>YGO Tools</title>
+  <style>
+    :root {
+      --bg: #f5f5f2;
+      --text: #1c1c1e;
+      --btn-bg: #2b3a67;
+      --btn-text: #ffffff;
+      --focus: #e0a800;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #14161c;
+        --text: #f0f0f0;
+        --btn-bg: #4a63b8;
+        --btn-text: #ffffff;
+      }
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+      padding: 1.5rem;
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.75rem, 7vw, 2.5rem);
+      text-align: center;
+    }
+
+    .menu {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      width: 100%;
+      max-width: 420px;
+    }
+
+    .menu a {
+      display: block;
+      padding: 1.25rem 1rem;          /* large tap target for thumbs */
+      min-height: 64px;
+      background: var(--btn-bg);
+      color: var(--btn-text);
+      font-size: 1.25rem;
+      font-weight: 600;
+      text-align: center;
+      text-decoration: none;
+      border-radius: 14px;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .menu a:active { transform: scale(0.98); }
+    .menu a:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+  </style>
+</head>
+<body>
+  <h1>YGO Tools</h1>
+
+  <nav class="menu">
+    <!-- Change each href to the filename of your page, and each label to its name -->
+    <a href="page1.html">Button One</a>
+    <a href="page2.html">Button Two</a>
+    <a href="page3.html">Button Three</a>
+  </nav>
+</body>
+</html>
