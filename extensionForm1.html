@@ -114,7 +114,7 @@
         <label for="event">Event</label>
         <select id="event">
           <option value="">Select event</option>
-          <option>Advance</option>
+          <option>Advanced</option>
           <option>Genesys</option>
         </select>
       </div>
@@ -134,10 +134,6 @@
         <input id="time" type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="off" placeholder="Whole number">
       </div>
 
-      <div class="full">
-        <label for="judgeName">Judge Name</label>
-        <input id="judgeName" type="text" autocomplete="off" placeholder="Judge name">
-      </div>
     </div>
 
     <div class="buttons">
@@ -158,9 +154,9 @@
   // EDIT HERE: event name shown at the top of the Discord output.
   // Change the text between the quotes. Leave it as "" to hide it.
   // ============================================================
-  const EVENT_NAME = "";
+  const EVENT_NAME = "CORI Greenville, SC";
 
-  const fields = ["event", "round", "table", "time", "judgeName"];
+  const fields = ["event", "round", "table", "time"];
 
   function value(id) {
     return document.getElementById(id).value.trim();
@@ -171,8 +167,7 @@
       [EVENT_NAME.trim(), value("event")].filter(Boolean).join(" "),
       value("round") ? "R" + value("round") : "",
       value("table") ? "T" + value("table") : "",
-      value("time") ? "+" + value("time") + " minutes" : "",
-      value("judgeName")
+      value("time") ? "+" + value("time") + " minutes" : ""
     ];
 
     const text = "```\n" + lines.join("\n") + "\n```";
