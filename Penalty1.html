@@ -66,6 +66,12 @@
   }
   textarea { min-height: 120px; resize: vertical; }
   .full { grid-column: 1 / -1; }
+  .pair {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 10px;
+    min-width: 0;
+  }
   .buttons {
     display: flex;
     gap: 10px;
@@ -98,6 +104,7 @@
     body { padding: 12px; }
     .grid { grid-template-columns: 1fr; }
     .full { grid-column: auto; }
+    .pair { grid-template-columns: 1fr; }
     .card { padding: 16px; }
   }
 </style>
@@ -126,20 +133,41 @@
       </div>
 
       <div>
+        <label for="event">Event</label>
+        <select id="event">
+          <option value="">Select event</option>
+          <option>Advanced</option>
+          <option>Genesys</option>
+        </select>
+      </div>
+
+      <div>
         <label for="table">Table</label>
         <input id="table" type="text" inputmode="numeric" autocomplete="off">
       </div>
 
-      <div>
-        <label for="infraction">Infraction</label>
-        <select id="infraction">
-          <option value="">Select infraction</option>
-          <option>PE-Procedure Error</option>
-          <option>DE-Deck Error</option>
-          <option>MC-Marked Cards</option>
-          <option>DC-Drawing Cards</option>
-          <option>UC-Unsportsman Conduct</option>
-        </select>
+      <div class="pair">
+        <div>
+          <label for="infraction">Infraction</label>
+          <select id="infraction">
+            <option value="">Select infraction</option>
+            <option value="PE">PE-Procedure Error</option>
+            <option value="DE">DE-Deck Error</option>
+            <option value="MC">MC-Marked Cards</option>
+            <option value="DC">DC-Drawing Cards</option>
+            <option value="UC">UC-Unsportsman Conduct</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="severity">Severity</label>
+          <select id="severity">
+            <option value="">Select</option>
+            <option>Minor</option>
+            <option>Major</option>
+            <option>Strict</option>
+          </select>
+        </div>
       </div>
 
       <div>
@@ -177,9 +205,15 @@
 </div>
 
 <script>
+  // ============================================================
+  // EDIT HERE: event name shown at the top of the Discord output.
+  // Change the text between the quotes. Leave it as "" to hide it.
+  // ============================================================
+  const EVENT_NAME = "Greenville, SC CORI";
+
   const fields = [
-    "duelistName", "konamiId", "round", "table",
-    "infraction", "penalty", "description", "judgeName"
+    "duelistName", "konamiId", "round", "event", "table",
+    "infraction", "severity", "penalty", "description", "judgeName"
   ];
 
   function value(id) {
@@ -187,24 +221,23 @@
   }
 
   function generateOutput() {
-    const text = "```\n" +
-`Table number: ${value("table")}
-` +
-`Duelist: ${value("duelistName")}
-` +
-`Konami ID: ${value("konamiId")}
-` +
-`Infraction: ${value("infraction")}
-` +
-`Penalty: ${value("penalty")}
-` +
-`Round: ${value("round")}
-` +
-`Brief Description: ${value("description")}
-` +
-`Name: ${value("judgeName")}
-` +
-"```";
+    const infraction = value("infraction") +
+      (value("severity") ? " - " + value("severity") : "");
+
+    const lines = [];
+    lines.push([EVENT_NAME.trim(), value("event")].filter(Boolean).join(" "));
+    lines.push(
+      value("table"),
+      value("duelistName"),
+      value("konamiId"),
+      infraction,
+      value("penalty"),
+      value("round") ? "R" + value("round") : "",
+      value("description"),
+      value("judgeName")
+    );
+
+    const text = "```\n" + lines.join("\n") + "\n```";
 
     document.getElementById("output").value = text;
     return text;
