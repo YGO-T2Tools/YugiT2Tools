@@ -17,6 +17,22 @@
     max-width: 900px;
     margin: 0 auto;
   }
+  .back {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    margin-bottom: 16px;
+    padding: 10px 16px;
+    background: white;
+    color: #374151;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 7px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.08);
+    -webkit-tap-highlight-color: transparent;
+  }
+  .back:hover { background: #e5e7eb; }
+  .back:focus-visible { outline: 2px solid #9ca3af; outline-offset: 2px; }
   h1 { margin: 0 0 6px; font-size: 28px; }
   .subtitle { margin: 0 0 24px; color: #6b7280; }
   .card {
@@ -88,6 +104,7 @@
 </head>
 <body>
 <div class="container">
+  <a class="back" href="index.html">← Back</a>
   <h1>Discord Infraction Form</h1>
   <p class="subtitle">Enter the infraction details, then copy the formatted report into Discord.</p>
 
