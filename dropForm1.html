@@ -167,7 +167,7 @@
   function generateOutput() {
     const lines = [
       [EVENT_NAME.trim(), value("event")].filter(Boolean).join(" "),
-      value("table"),
+      value("table") ? "T" + value("table") : "",
       value("winnerName"),
       value("winnerId"),
       value("round") ? "R" + value("round") : ""
